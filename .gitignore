@@ -1,0 +1,12 @@
+# Node dependencies
+node_modules/
+
+# Environment variables
+.env
+client/src/.env
+server/.env
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

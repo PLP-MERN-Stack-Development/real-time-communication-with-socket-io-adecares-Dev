@@ -9,15 +9,13 @@ import { FiLogOut, FiSettings, FiWifi, FiWifiOff } from 'react-icons/fi';
 
 const Chat = () => {
   const [activeRoom, setActiveRoom] = useState('general');
-  const { currentUser, onlineUsers, socketService, isConnected } = useSocket();
+  const { currentUser, onlineUsers, socketService, isConnected } = useSocket(); // Add isConnected
 
   const handleSelectRoom = (roomId) => {
     setActiveRoom(roomId);
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('chat_user');
-    localStorage.removeItem('chat_token');
     socketService.disconnect();
     window.location.reload();
   };
@@ -28,9 +26,7 @@ const Chat = () => {
 
   return (
     <div className="chat-page">
-      {/* ==================== */}
-      {/* MAIN APP HEADER */}
-      {/* ==================== */}
+      {/* MAIN HEADER WITH CONNECTION STATUS */}
       <div className="main-header">
         <div className="app-title">
           <h1>Socket.io Chat</h1>
@@ -49,52 +45,24 @@ const Chat = () => {
           </div>
           
           <div className="user-profile-mini">
-            <img 
-              src={currentUser.avatar} 
-              alt={currentUser.username} 
-              className="mini-avatar" 
-              onError={(e) => {
-                e.target.src = `https://ui-avatars.com/api/?name=${currentUser.username}&background=random`;
-              }}
-            />
+            <img src={currentUser.avatar} alt={currentUser.username} className="mini-avatar" />
             <span className="mini-username">{currentUser.username}</span>
           </div>
           
-          <button className="icon-btn" onClick={handleLogout} title="Logout">
+          <button className="icon-btn" onClick={handleLogout}>
             <FiLogOut size={18} />
           </button>
         </div>
       </div>
 
-      {/* ==================== */}
-      {/* MAIN CHAT LAYOUT */}
-      {/* ==================== */}
       <div className="chat-layout">
-        {/* LEFT SIDEBAR - ROOMS */}
         <div className="sidebar">
-          <div className="sidebar-header">
-            <h3>Chat Rooms</h3>
-            <span className="room-count">4 rooms</span>
-          </div>
-          
           <RoomList
             activeRoom={activeRoom}
             onSelectRoom={handleSelectRoom}
           />
-          
-          <div className="sidebar-footer">
-            <div className="user-stats">
-              <div className="stat-item">
-                <span className="stat-label">Your ID:</span>
-                <span className="stat-value" title={currentUser.userId}>
-                  {currentUser.userId.substring(0, 8)}...
-                </span>
-              </div>
-            </div>
-          </div>
         </div>
 
-        {/* MAIN CONTENT - CHAT ROOM */}
         <div className="main-content">
           <ChatRoom
             roomId={activeRoom}
@@ -103,19 +71,9 @@ const Chat = () => {
           <TypingIndicator roomId={activeRoom} />
         </div>
 
-        {/* RIGHT SIDEBAR - USERS & NOTIFICATIONS */}
         <div className="right-sidebar">
-          <div className="sidebar-header">
-            <h3>Online Users</h3>
-            <span className="user-count">{onlineUsers.length} online</span>
-          </div>
-          
           <UserList />
-          
-          <div className="notification-section">
-            <Notification />
-          </div>
-          
+          <Notification />
           <div className="online-stats">
             <div className="stat-item">
               <span className="stat-label">Online Users:</span>
@@ -124,10 +82,6 @@ const Chat = () => {
             <div className="stat-item">
               <span className="stat-label">Active Rooms:</span>
               <span className="stat-value">4</span>
-            </div>
-            <div className="stat-item">
-              <span className="stat-label">Your Status:</span>
-              <span className="stat-value status-online">Online</span>
             </div>
           </div>
         </div>
